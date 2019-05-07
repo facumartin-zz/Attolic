@@ -123,7 +123,7 @@ uint8_t bufferRX_UART2[50];
   * @retval int
   */
 int main(void)
-{
+	{
   /* USER CODE BEGIN 1 */
 	OK_UART2 = FALSE;
 
@@ -169,8 +169,8 @@ int main(void)
   int maxposition;
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_4, GPIO_PIN_SET);
-  TIM4->ARR=5000;
-  __HAL_TIM_SetCompare(&htim4,TIM_CHANNEL_1,2500);
+  TIM4->ARR=2000;       //desborde de tiempo de pwm en timer 4.
+  __HAL_TIM_SetCompare(&htim4,TIM_CHANNEL_1,1000); //match de comparación en timer 4, siempre tiene que ser la mitad de ARR.
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -185,6 +185,8 @@ int main(void)
 	  }
 		  if((estado==2 || estado==3)&&((HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_9) == GPIO_PIN_SET)||(HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_13) == GPIO_PIN_SET))){
 		  		estado=5; //error
+		  		HAL_TIM_PWM_Stop_IT(&htim4,TIM_CHANNEL_1);
+		  		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
 		  		 }
 	//  }
 
@@ -319,7 +321,7 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 16000;
+  htim3.Init.Prescaler = 160;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim3.Init.Period = 1000;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -731,6 +733,7 @@ void Polling_UART() {
 									char info[50];
 									sprintf(info, "Constante,vel:%d ,freq: %d\n",vel, freq);
 									const_vel(vel,freq);
+
 									HAL_UART_Transmit(&huart2, (uint8_t*)info, strlen(info), 200);
 								}
 			else if(rx_data_UART[1]=='v'){

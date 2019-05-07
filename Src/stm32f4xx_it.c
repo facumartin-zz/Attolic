@@ -262,6 +262,7 @@ void EXTI9_5_IRQHandler(void)
   if(HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_9) == GPIO_PIN_SET){
   posActual=0;
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_4, GPIO_PIN_RESET);
+  HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_15);
   }
   /* USER CODE END EXTI9_5_IRQn 1 */
 }
@@ -290,13 +291,13 @@ void TIM3_IRQHandler(void)
 		HAL_GPIO_WritePin(GPIOC,GPIO_PIN_4, GPIO_PIN_SET);
 	}
 	HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_15);
-	sprintf(info, "velAct: %d\n",velocidades[actualVel]);
-	HAL_UART_Transmit(&huart2, (uint8_t*)info, strlen(info), 200);
+	//sprintf(info, "velAct: %d\n",velocidades[actualVel]);
+	//HAL_UART_Transmit(&huart2, (uint8_t*)info, strlen(info), 200);
 	TIM4->ARR=abs(velocidades[actualVel]);
 	__HAL_TIM_SetCompare(&htim4,TIM_CHANNEL_1,((abs(velocidades[actualVel]))/2));
 
 	}
-	HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_15);
+
   /* USER CODE END TIM3_IRQn 0 */
   HAL_TIM_IRQHandler(&htim3);
   /* USER CODE BEGIN TIM3_IRQn 1 */
@@ -309,7 +310,7 @@ void TIM3_IRQHandler(void)
 void TIM4_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM4_IRQn 0 */
-	HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_14);
+
 	char info[50];
 	if ((estado==0) || (estado==1 && posCentral!=posActual) || (estado==3) || (estado==4)){
 		//sprintf(info, "posAct: %d\n",posActual);
@@ -326,7 +327,7 @@ void TIM4_IRQHandler(void)
 		HAL_TIM_PWM_Stop_IT(&htim4,TIM_CHANNEL_1);
 		estado=2;
 		HAL_UART_Transmit(&huart2, (uint8_t*)"home finished\n", 14, 200);
-		HAL_GPIO_WritePin(GPIOD,GPIO_PIN_14,GPIO_PIN_RESET);
+		//HAL_GPIO_WritePin(GPIOD,GPIO_PIN_14,GPIO_PIN_RESET);
 		}
 	}
 
@@ -394,6 +395,7 @@ void EXTI15_10_IRQHandler(void)
   posCentral=posMax/2;
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_4, GPIO_PIN_SET);
   estado=1;
+  HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_14);
   }
   /* USER CODE END EXTI15_10_IRQn 1 */
 }

@@ -571,12 +571,12 @@ void triangle_wave(int freq, int min,int max){
 		velocidades[0]=min;
 
 		for (int i=1;i<100;i++){
-		if ((i+4) % period ==0)
+		if (i % period ==0)
 		{
 			delta=-delta;
 		}
 		velocidades[i]= (abs(velocidades[i-1])+delta)*sign;
-		if (abs(velocidades[i])==max){
+		if (abs(velocidades[i])==min){
 			sign=-sign;
 		}
 		}
@@ -607,7 +607,7 @@ void sin_wave(int freq,int min, int max){
 	int sign=1;
 	for (int i=0;i<100;i++){
 		velocidades[i]=(int)((sin(i*2*M_PI*0.01*freq)*amp*sign)+min);
-		if (velocidades[i]==max){
+		if (velocidades[i]==min){
 			 sign=-sign;
 		}
 	}

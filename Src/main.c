@@ -607,7 +607,7 @@ void sin_wave(int freq,int min, int max){
 	int sign=1;
 	for (int i=0;i<100;i++){
 		velocidades[i]=(int)((sin(i*2*M_PI*0.01*freq)*amp*sign)+min);
-		if (velocidades[i]==min){
+		if (i%(100/(2*freq))){
 			 sign=-sign;
 		}
 	}
